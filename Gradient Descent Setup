@@ -1,0 +1,21 @@
+## Gradient Descent through a Hikers Guide
+this code defines the setup of a parabola, and represents the cost function. This is like a large inverted hill
+<img width="693" height="51" alt="image" src="https://github.com/user-attachments/assets/eaf39474-8faf-485e-ba34-3a3a1212e5b2" />
+
+
+- by choosing random x values (x=torch.randn(1)), you are taking random steps and seeing where the corresponding y value is
+- y on the parabola is calculated using fx(x)
+- y.backward() feels the slope and dy_dx_ = x.grad determines the slope at the point you stepped at. It determines if something is negative or positive and tells what our next adjustment is going to be. They work together.
+<img width="202" height="110" alt="image" src="https://github.com/user-attachments/assets/08985551-b922-40d4-8b64-d8c5e2707ee5" />
+
+
+
+### Analogy
+
+<img width="361" height="154" alt="image" src="https://github.com/user-attachments/assets/93964719-3634-4b0e-8ed4-f528b61cf4ec" />
+
+
+feel the slope with y_.backward()\
+Take small steps downhill x_-=learning_rate *dy_dx_\
+clear your mind and forget the slope of the old spot x_.grad.zero()\
+Repeat
