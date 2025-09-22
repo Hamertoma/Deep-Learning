@@ -1,0 +1,68 @@
+import torch
+import torchvision
+import torch.nn as nn
+import numpy as np
+import matplotlib.pyplot as plt
+
+#torch can generate arrays
+W_torch = torch.ones(3,2)
+
+#rand creates random values in the array between 0 and 1
+y=torch.rand(4,5)
+print(y)
+#can also do operations on the arrays
+print(y*10)
+
+#Reshaping arrays
+tensor = torch.rand(4,4)
+print("original tensor\n", tensor)
+print("reshaped tensor\n", tensor.reshape(2,8))
+print("reshaped tensor to whatever\n", tensor.view(2,-1)) #-1 means the machine will figure out the size
+
+#PYTORCH AUTOGRAD FUNCTION
+#tensors can track gradients
+
+fx = lambda x: x**2 + 1.5*x - 1
+x=np.linspace(-10,8.5,100)
+plt.plot(x,fx(x))  
+
+#create a random x point and find the gradient using pytorch
+x = torch.randn(1)
+x.requires_grad_(True) #tells pytorch to track the gradients
+
+y = fx(x)
+y.backward() #computes the gradient
+dy_dx = x.grad #gets the gradient
+print("value of dy_dx is: ",dy_dx) #dy_dx value is the gradient(slope) at that random x value
+print("value of x is: ",x)      #x value is a random x value 
+
+#descending the gradient
+learning_rate=0.01
+x_logger=[]
+y_logger=[]
+
+x_=torch.randn(1)
+x_.requires_grad=True
+stepcounter=0
+dy_dx_=1000
+max_steps=1000
+
+while np.abs(dy_dx_)>0.001: #we keep taking steps to reduce the gradient
+    y_=fx(x_) #calculates the y value
+    
+    #calculate the gradient
+    y_.backward() 
+    dy_dx_ = x_.grad.item()
+    
+    #just used for logging. theres some weird stuff that pytorch does with the computational graph so we have nograd here
+    with torch.no_grad():
+        x_-=learning_rate*dy_dx_
+        x_.grad.zero_()
+        x_logger.append(x_.item())
+        y_logger.append(y_.item())
+
+    #just want the step counter to stop infinite loops we max at 1000
+    stepcounter+=1
+    if stepcounter ==max_steps:
+        break
+print("Y minimum is %.2f and is when x = %.2f, found after %d steps" % (y_.item(),x_.item(),stepcounter))
